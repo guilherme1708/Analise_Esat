@@ -1,0 +1,134 @@
+---
+title: "MAE314 - Análise estatística"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+12) O arquivo Peru do Minitab cont?m medidas associadas a 39 índios peruanos que migraram das montanhas para um ambiente urbano. Considerando as variáveis: Idade(X1),Peso(X2),Altura(X3) e Pulsação(X4).
+
+a) Obtenha o vetor de médias e a matriz de covariância amostral para essas variáveis.
+
+###Resolução
+
+```{r}
+library(readxl)
+peru <- read_excel("/home/gui/peru.xlsx")
+attach(peru)
+Matriz <- matrix(c(Age,Weight,Height,Pulse),39,4)
+colnames(Matriz) <- c("Age","Weight","Height","Pulse")
+Medias <- apply(Matriz,2,mean)
+Covariancia <- cov(Matriz)
+rownames(Covariancia) <- c("Age","Weight","Height","Pulse")
+colnames(Covariancia) <- c("Age","Weight","Height","Pulse")
+Medias
+Covariancia
+```
+
+b) Obtenha a matriz de correlação
+
+### Resolução
+
+```{r}
+Correlacao <- cor(Matriz)
+rownames(Correlacao) <- c("Age","Weight","Height","Pulse")
+colnames(Correlacao) <- c("Age","Weight","Height","Pulse")
+Correlacao
+
+panel.hist <- function(x, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "blue", ...)
+}
+
+#função retirada do help(pairs)
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- abs(cor(x, y))
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * 1)
+}
+pairs(Matriz, diag.panel = panel.hist, upper.panel = panel.cor)
+
+```
+
+13) O sanduíche Big Mac, presente em todos os paises onde a rede McDonald's opera, foi utilizado como um índice econômico. Em 1986, a revista britânica The Economist criou indice Big Mac, com o objetivo de comparar o valor do Big Mac em diversos palses do mundo.
+Os dados presentes no arquivo bigmac.xls apresentam variáveis relativas a essa análise para uma amostra de 45 paises, em um determinado instante de tempo.
+
+Para as variáveis:
+
+BigMac - Número médio de minutos de trabalho necessários para comprar um BigMac
+
+Bread - Número médio de minutos de trabalho necessários para comprar 1 kg de pão,
+
+EngSal - Salário médio anual de um engenheiro elétrico, em milhares de dólares,
+
+TeachSal-Salário médio anual do professor do ensino fundamental em milhares de dólares,
+
+Service-Custo anual de 19 serviços primariamente relevantes paraEuropa e América do Norte
+
+a) Obtenha o vetor de médias e a matriz de covariância amostral.
+
+### Resolução
+
+```{r}
+Mac <- read_excel("/home/gui/BigMac.xlsx")
+attach(Mac)
+Matriz <- matrix(c(BigMac,Bread,as.numeric(EngSal),as.numeric(TeachSal),Service),45,5)
+colnames(Matriz) <- c("BigMac","Bread","EngSal","TeachSal","Service")
+Media <- apply(Matriz,2,mean)
+Covariancia <- cov(Matriz)
+rownames(Covariancia) <- c("BigMac","Bread","EngSal","TeachSal","Service")
+colnames(Covariancia) <- c("BigMac","Bread","EngSal","TeachSal","Service")
+Media
+Covariancia
+```
+
+b) Obtenha a matriz de correlação.(correlação linear de Pearson)
+
+### Resolução
+
+```{r}
+Correlacao <- cor(Matriz)
+rownames(Correlacao) <- c("BigMac","Bread","EngSal","TeachSal","Service")
+colnames(Correlacao) <- c("BigMac","Bread","EngSal","TeachSal","Service")
+Correlacao
+
+panel.hist <- function(x, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(usr[1:2], 0, 1.5) )
+  h <- hist(x, plot = FALSE)
+  breaks <- h$breaks; nB <- length(breaks)
+  y <- h$counts; y <- y/max(y)
+  rect(breaks[-nB], 0, breaks[-1], y, col = "blue", ...)
+}
+
+#função retirada do help(pairs)
+panel.cor <- function(x, y, digits = 2, prefix = "", cex.cor, ...)
+{
+  usr <- par("usr"); on.exit(par(usr))
+  par(usr = c(0, 1, 0, 1))
+  r <- abs(cor(x, y))
+  txt <- format(c(r, 0.123456789), digits = digits)[1]
+  txt <- paste0(prefix, txt)
+  if(missing(cex.cor)) cex.cor <- 0.8/strwidth(txt)
+  text(0.5, 0.5, txt, cex = cex.cor * 1)
+}
+pairs(Matriz, diag.panel = panel.hist, upper.panel = panel.cor)
+
+```
+
+c) Determine o par de variáveis com maior coeficiente de correlação linear
+
+### Resolução
+
+O par de variáveis com o maior coeficiente de correlação é (BigMac-Bread)
